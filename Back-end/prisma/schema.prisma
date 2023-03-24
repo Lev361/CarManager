@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// Client Model
+model Client {
+    id Int @id @default(autoincrement())
+    cpf String  @unique
+    password String
+    vehicle Vehicle[]
+    vehicleSupplies VehicleSupplies[]
+}
+
+// Vehicle Model
+model Vehicle {
+  id Int @id @default(autoincrement())
+    license_plate String
+    renavam Int
+    color String
+    potency Int 
+    model String
+    brand String
+    client Client @relation(fields: [clientId], references: [id])
+    clientId Int
+    vehicleSupplies VehicleSupplies[]
+}
+
+
+// Registration of vehicle supplies
+model VehicleSupplies {
+  id Int @id @default(autoincrement())
+  client Client @relation(fields: [clientId], references: [id])
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicleId Int
+  clientId Int
+}
+
+
+enum Role {
+  USER
+  ADMIN
+}
